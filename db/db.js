@@ -1,4 +1,6 @@
 const { Sequelize } = require('sequelize');
+const UserModel = require('../models/userModel'); // Importa el modelo de usuario
+const PacienteModel = require('../models/patientModel'); // Importa el modelo de paciente
 
 // Conexión a la base de datos
 const sequelize = new Sequelize('bdjwt', 'root', 'admin', {
@@ -6,49 +8,11 @@ const sequelize = new Sequelize('bdjwt', 'root', 'admin', {
   dialect: 'mysql'
 });
 
-// Definición del modelo de usuario
-const User = sequelize.define('User', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  lastname: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  cedula: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  date: {
-    type: Sequelize.DATEONLY,
-    allowNull: false
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  celular: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  pass: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  rol: {
-    type: Sequelize.STRING,
-    allowNull: false
-  }
-});
+// Define los modelos
+const User = UserModel(sequelize);
+const Paciente = PacienteModel(sequelize);
 
-// Sincronizar el modelo con la base de datos (crear la tabla si no existe)
+// Sincroniza los modelos con la base de datos (esto creará las tablas si no existen)
 sequelize.sync();
 
-module.exports = { sequelize, User };
+module.exports = { sequelize, User, Paciente };

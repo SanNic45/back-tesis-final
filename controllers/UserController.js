@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const { User } = require('../db/db.js');
 
 const router = express.Router();
@@ -29,10 +30,11 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Crear un nuevo usuario
+// Crear un nuevo usuario con hasheo de contraseña
 router.post('/', async (req, res) => {
   const { name, lastname, cedula, date, email, celular, pass, rol } = req.body;
   try {
+    const hashedPassword = await bcrypt.hash(pass, 10); // Hash the password with 10 rounds
     const newUser = await User.create({
       name,
       lastname,
@@ -40,8 +42,8 @@ router.post('/', async (req, res) => {
       date,
       email,
       celular,
-      pass,
-      rol
+      pass: hashedPassword, // Store the hashed password
+      rol,
     });
     res.status(201).json(newUser);
   } catch (error) {
